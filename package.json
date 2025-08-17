@@ -17,13 +17,13 @@
   ],
   "author": "Mizzou Baseball Analytics Team",
   "license": "MIT",
-  "homepage": "https://github.com/your-username/mizzou-baseball-dashboard#readme",
+  "homepage": "https://github.com/dapilolli/mizzou-baseball-dashboard#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/mizzou-baseball-dashboard.git"
+    "url": "git+https://github.com/dapilolli/mizzou-baseball-dashboard.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/mizzou-baseball-dashboard/issues"
+    "url": "https://github.com/dapilolli/mizzou-baseball-dashboard/issues"
   },
   "scripts": {
     "dev": "vite",
