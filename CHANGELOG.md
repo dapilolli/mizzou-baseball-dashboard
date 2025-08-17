@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-08-17
 
 ### Added
+
 - **Dual-Mode Scouting Interface**: Visual, Narrative, and Split view modes
 - **Advanced Pitcher Analytics**: Comprehensive pitch movement analysis with TrackMan-style metrics
 - **Pitch Movement Charts**: Interactive scatter plots showing IVB vs HB for all pitch types
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TypeScript Integration**: Full type safety with comprehensive interfaces
 
 ### Features
+
 - **Arsenal Analysis**: Detailed breakdown of pitch types, usage, and effectiveness
 - **Movement Profiles**: IVB, HB, extension, release height, and tilt measurements
 - **Performance Metrics**: Whiff rates, putaway rates, FIP-based splits
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Times Through Order**: Performance analysis across multiple plate appearances
 
 ### Technical
+
 - React 18 + TypeScript foundation
 - Vite build system for fast development
 - TailwindCSS for utility-first styling
@@ -37,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modular component architecture
 
 ### Data
+
 - **Pitch Types**: 4S, SI, SL, CH, CB, CT, SFF, SW with realistic metrics
 - **Movement Data**: Physics-based IVB/HB calculations
 - **Tilt Analysis**: 360-degree spin axis measurements
@@ -46,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-08-16
 
 ### Added
+
 - Initial project setup
 - Basic scouting page structure
 - Header navigation component
@@ -54,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 **Release Notes:**
+
 - This is the initial public release of the Mizzou Baseball Analytics Dashboard
 - Features comprehensive scouting tools for college baseball analysis
 - Built specifically for coaching staff and analytics teams

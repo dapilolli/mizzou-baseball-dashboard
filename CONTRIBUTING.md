@@ -5,6 +5,7 @@ We love contributions! This guide will help you get started with contributing to
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18 or higher
 - npm or yarn package manager
 - Git
@@ -13,22 +14,26 @@ We love contributions! This guide will help you get started with contributing to
 ### Development Setup
 
 1. **Fork and Clone**
+
    ```bash
    git clone https://github.com/your-username/mizzou-baseball-dashboard.git
    cd mizzou-baseball-dashboard
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start Development Server**
+
    ```bash
    npm run dev
    ```
 
 4. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -36,6 +41,7 @@ We love contributions! This guide will help you get started with contributing to
 ## 📋 Development Guidelines
 
 ### Code Style
+
 - Use TypeScript for all new components
 - Follow existing naming conventions
 - Use TailwindCSS for styling (avoid inline styles)
@@ -43,6 +49,7 @@ We love contributions! This guide will help you get started with contributing to
 - Include JSDoc comments for complex functions
 
 ### Component Structure
+
 ```typescript
 // Component template
 import React from 'react';
@@ -65,6 +72,7 @@ export default Component;
 ```
 
 ### Data and Types
+
 - Add new interfaces to `src/types/scouting.ts`
 - Update mock data generators in `src/data/mockData.ts`
 - Follow baseball analytics naming conventions (IVB, HB, etc.)
@@ -73,6 +81,7 @@ export default Component;
 ## 🎯 Areas for Contribution
 
 ### High Priority
+
 - **Real Data Integration**: Connect to actual baseball data APIs
 - **Additional Visualizations**: New chart types and analytics
 - **Performance Optimization**: Component optimization and caching
@@ -80,6 +89,7 @@ export default Component;
 - **Accessibility**: ARIA labels and keyboard navigation
 
 ### Medium Priority
+
 - **Testing**: Unit tests and integration tests
 - **Documentation**: Component documentation and examples
 - **Internationalization**: Multi-language support
@@ -87,6 +97,7 @@ export default Component;
 - **Advanced Filters**: More sophisticated filtering options
 
 ### Low Priority
+
 - **Animation**: Smooth transitions and loading states
 - **Export Options**: Additional export formats
 - **User Preferences**: Saved settings and preferences
@@ -95,6 +106,7 @@ export default Component;
 ## 🧪 Adding New Features
 
 ### New Chart Component
+
 1. Create component in `src/components/scouting/`
 2. Add TypeScript interfaces if needed
 3. Include in parent components
@@ -102,12 +114,14 @@ export default Component;
 5. Test responsiveness and dark theme compatibility
 
 ### New Data Metric
+
 1. Add to TypeScript interfaces in `src/types/scouting.ts`
 2. Update mock data generators
 3. Add to relevant components
 4. Update documentation
 
 ### New Page/Route
+
 1. Create page component in `src/pages/`
 2. Add route to routing configuration
 3. Update navigation if needed
@@ -116,6 +130,7 @@ export default Component;
 ## 🔍 Testing
 
 ### Manual Testing Checklist
+
 - [ ] All view modes work (Visual, Narrative, Split)
 - [ ] Filters function correctly
 - [ ] Expandable cards open/close properly
@@ -125,7 +140,9 @@ export default Component;
 - [ ] No console errors
 
 ### Future Testing
+
 We welcome contributions for:
+
 - Jest unit tests
 - React Testing Library integration tests
 - E2E testing with Cypress or Playwright
@@ -133,12 +150,14 @@ We welcome contributions for:
 ## 📝 Pull Request Process
 
 ### Before Submitting
+
 1. **Test Thoroughly**: Ensure your changes work across different scenarios
 2. **Check Formatting**: Run any linting/formatting tools
 3. **Update Documentation**: Add/update comments and documentation
 4. **Verify No Breaking Changes**: Ensure existing functionality still works
 
 ### PR Template
+
 ```markdown
 ## Description
 Brief description of changes
@@ -163,6 +182,7 @@ Any additional context or notes
 ```
 
 ### Review Process
+
 1. Automated checks will run
 2. Maintainers will review code
 3. Address any feedback
@@ -171,6 +191,7 @@ Any additional context or notes
 ## 🐛 Bug Reports
 
 ### Bug Report Template
+
 ```markdown
 **Describe the bug**
 Clear description of what the bug is
@@ -196,6 +217,7 @@ If applicable, add screenshots
 ## 💡 Feature Requests
 
 We welcome feature requests! Please include:
+
 - **Use Case**: Why this feature would be valuable
 - **Description**: Detailed description of the feature
 - **Mockups**: Visual examples if applicable
@@ -210,6 +232,7 @@ We welcome feature requests! Please include:
 ## 🏆 Recognition
 
 Contributors will be:
+
 - Listed in the README
 - Mentioned in release notes for significant contributions
 - Given credit in documentation they help create
