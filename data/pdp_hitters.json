@@ -1,0 +1,323 @@
+{
+  "Seals": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with fastballs (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Hernandez": {
+    "proficiencies": [
+      "Excellent recognition of CH"
+    ],
+    "deficiencies": [],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Peer": {
+    "proficiencies": [
+      "High OPS production"
+    ],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Lovich": {
+    "proficiencies": [
+      "High OPS production"
+    ],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Daniels": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Serna": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with spin (Miss% > 25%)",
+      "Struggles with fastballs (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Curtis": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Frost": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with spin (Miss% > 25%)",
+      "Struggles with fastballs (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Benson": {
+    "proficiencies": [
+      "High OPS production",
+      "Selective swing profile"
+    ],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Basler": {
+    "proficiencies": [
+      "Selective swing profile"
+    ],
+    "deficiencies": [],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Nicoletto": {
+    "proficiencies": [],
+    "deficiencies": [],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Macon": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Simpson": {
+    "proficiencies": [
+      "High OPS production"
+    ],
+    "deficiencies": [],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Lawrence": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Patterson": {
+    "proficiencies": [],
+    "deficiencies": [
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Picarelli": {
+    "proficiencies": [
+      "High OPS production"
+    ],
+    "deficiencies": [
+      "Struggles with changeups (Miss% > 30%)",
+      "Struggles with fastballs (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [
+      "Improve recognition of CH to reduce swing-and-miss"
+    ],
+    "journal": [],
+    "routines": []
+  },
+  "Knutson": {
+    "proficiencies": [],
+    "deficiencies": [],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Malpass": {
+    "proficiencies": [
+      "Selective swing profile"
+    ],
+    "deficiencies": [
+      "Struggles with fastballs (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  },
+  "Callaway": {
+    "proficiencies": [
+      "Selective swing profile"
+    ],
+    "deficiencies": [
+      "Struggles with spin (Miss% > 25%)"
+    ],
+    "kpis": [
+      "<25% Miss% vs FB",
+      "<30% Miss% vs Spin",
+      ">0.400 SLG",
+      ">0.750 OPS"
+    ],
+    "goals": [],
+    "journal": [],
+    "routines": []
+  }
+}

@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'NCAA Missouri Tigers';
+    src: url('./assets/NCAA_Missouri_Tigers.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.missouri-font {
+    font-family: 'NCAA Missouri Tigers', Arial, sans-serif;
+    font-display: swap;
+    font-weight: bold;
+}
+
+.missouri-header-font {
+    font-family: 'NCAA Missouri Tigers', 'Arial Black', 'Impact', 'Franklin Gothic Medium', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 900 !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.missouri-background {
+    background-image: url('./assets/MISSOURIu.svg');
+    background-size: 262.5%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
