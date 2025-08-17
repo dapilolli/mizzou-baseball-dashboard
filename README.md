@@ -6,12 +6,10 @@ A comprehensive dual-mode scouting hub that combines professional data visualiza
 
 ### **Dual-Mode Interface**
 
-
 - **Visual Mode**: Professional charts, graphs, and heat maps
 - **Narrative Mode**: AI-generated tactical analysis and recommendations
 - **Split View**: Combined visual and narrative display
 - **Print/Export**: PDF-ready formatting for reports
-
 
 ### **Advanced Scouting Analytics**
 
@@ -22,7 +20,6 @@ A comprehensive dual-mode scouting hub that combines professional data visualiza
 - **Heat Maps**: Strike zone location tendencies
 - **Performance Metrics**: FIP, whiff rates, usage patterns, and effectiveness data
 
-
 ### **Interactive Visualizations**
 
 - **Recharts Integration**: Professional data visualization library
@@ -31,14 +28,12 @@ A comprehensive dual-mode scouting hub that combines professional data visualiza
 - **Filter System**: Team, handedness, and situation filtering
 - **Real-time Updates**: Dynamic chart updates based on filter selections
 
-
-## 🚀 Quick Sart
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
 - npm or yarn package manager
-
 
 ### Installation
 
@@ -51,7 +46,6 @@ A comprehensive dual-mode scouting hub that combines professional data visualiza
    ```
 
 2. **Install dependencies**
-
 
    ```bash
    npm install
@@ -79,15 +73,21 @@ npm run preview
 
 The application uses TrackMan/TruMedia-style baseball analytics with comprehensive metrics:
 
+### **Real Data Sources**
 
-### **Pitcher Data**
+- **Game Data**: Pitch-by-pitch data from Missouri vs Alabama games
+- **Player Statistics**: Season stats for Missouri hitters and pitchers  
+- **PDP Data**: Player Development Program goals and progress tracking
+- **Training Data**: Drill templates and coaching resources
 
-- **Basic Info**: Name, team, handedness, role
-- **Pitch Types**: Velocity, spin rate, movement (IVB/HB), extension, release height, tilt
-- **Performance**: Whiff rate, putaway rate, usage percentage
-- **Location**: Strike zone heat maps
-- **Splits**: Times through order analysis (FIP-based)
+### **Key Data Files**
 
+- `MIZZOUVBAMA.csv` - Pitch-by-pitch game data
+- `Missouri - Hitting.csv` / `Missouri - Pitching.csv` - Season statistics
+- `Pitch Level Data v Alabama.csv` - Detailed TrackMan metrics
+- `Hitter_PDP_Goals.csv` / `Pitcher_PDP_Goals.csv` - Development targets
+- `Training_Drills.csv` - Practice drill library
+- `pdp_hitters.json` / `pdp_pitchers.json` - Player profiles
 
 ### **Advanced Metrics**
 
@@ -95,7 +95,6 @@ The application uses TrackMan/TruMedia-style baseball analytics with comprehensi
 - **Tilt Analysis**: Spin axis direction in degrees (0-360°) with clock notation
 - **Release Point**: Extension and height data
 - **Effectiveness**: Situational performance splits
-
 
 ## 🎯 Usage Examples
 
@@ -134,34 +133,27 @@ The application uses TrackMan/TruMedia-style baseball analytics with comprehensi
 ```
 src/
 ├── components/
-│   ├── scouting/           # Scouting-specific components
-│   │   ├── PitcherArsenalCard.tsx
-│   │   ├── PitchMovementChart.tsx
-│   │   ├── TiltRadialChart.tsx
-│   │   └── ...
-│   ├── Header.tsx          # Main navigation
+│   ├── AIRecommendations.tsx   # AI coaching insights
+│   ├── AlabamaScouting.tsx     # Opponent analysis
+│   ├── Header.tsx              # Main navigation
+│   ├── PDPDashboard.tsx        # Player development portal
 │   └── ...
 ├── pages/
-│   ├── ScoutingPage.tsx    # Main scouting interface
-│   ├── GamedayPage.tsx     # Game day dashboard
-
+│   ├── ScoutingPage.tsx        # Pitcher arsenal analysis
+│   ├── GamedayPage.tsx         # Live game dashboard
+│   ├── ReportsPage.tsx         # Player performance reports
+│   ├── PDPPage.tsx             # Development program interface
 │   └── ...
 ├── types/
-│   └── scouting.ts        # TypeScript interfaces
-
-├── data/
-│   ├── mockData.ts         # Realistic baseball data
-│   └── dataAdapter.ts      # Data transformation
-
-├── assets/                 # Images and fonts
-└── main.tsx               # Application entry point
+│   └── scouting.ts            # TypeScript interfaces
+├── data/                       # Real baseball data (CSV/JSON)
+├── assets/                     # Images and fonts
+└── main.tsx                   # Application entry point
 ```
-
 
 ## 🎨 Key Components
 
 ### **ScoutingPageEnhanced**
-
 
 Main orchestrator component with dual-mode interface, filtering, and export functionality.
 
@@ -171,16 +163,13 @@ Expandable pitcher analysis with overview and detailed breakdown including movem
 
 ### **PitchMovementChart**
 
-
 TrackMan-style scatter plot showing IVB vs HB with interactive tooltips.
 
 ### **TiltRadialChart**
 
 Radial histogram displaying pitch tilt distribution with clock notation.
 
-
 ## 🧪 Mock Data
-
 
 The application includes realistic mock data featuring:
 
@@ -191,20 +180,29 @@ The application includes realistic mock data featuring:
 
 ## 📋 Development Notes
 
+### **Data Architecture**
+
+- **Scouting Page**: Uses mock data for advanced pitcher analysis (realistic TrackMan-style metrics)
+- **Game Day**: Real pitch-by-pitch data from CSV files via backend API
+- **Reports**: Actual player statistics from season data files
+- **PDP Dashboard**: Player development data from CSV files and JSON profiles
+
 ### **Adding New Features**
 
 1. Define TypeScript interfaces in `types/scouting.ts`
 2. Create components in appropriate directories
-3. Add mock data generators in `data/mockData.ts`
-4. Integrate with existing filter and view systems
+3. For scouting features: Add mock data generators in `data/mockData.ts`
+4. For other features: Add CSV data processing in backend
+5. Integrate with existing filter and view systems
 
-### **Data Integration**
+### **Backend Requirements**
 
-To connect real data sources:
+This frontend requires a Python backend server to process CSV data and serve APIs. Key endpoints:
 
-1. Replace mock data functions in `data/mockData.ts`
-2. Update data adapter functions in `data/dataAdapter.ts`
-3. Ensure data matches TypeScript interfaces
+- `/gameday/*` - Live game data and pitch tracking
+- `/reports/*` - Player statistics and performance data  
+- `/pdp/*` - Player development program data
+- `/team/*` - Roster and lineup information
 
 ## 🤝 Contributing
 
