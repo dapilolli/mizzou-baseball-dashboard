@@ -161,7 +161,7 @@ const GamedayPage: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const response = await api('/gameday/demo-pitch');
+            const response = await api('/gameday/next-pitch');
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -197,7 +197,7 @@ const GamedayPage: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const response = await api('/gameday/demo-pitch-previous');
+            const response = await api('/gameday/previous-pitch');
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
