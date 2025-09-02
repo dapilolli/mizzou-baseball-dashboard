@@ -4,6 +4,7 @@ import AIRecommendations from '../components/AIRecommendations';
 import AlabamaScouting from '../components/AlabamaScouting';
 import './GamedayPage.css';
 
+
 // API Response Interfaces - matching your backend exactly
 import { api } from '@/utils/api';
 interface ApiPitchData {

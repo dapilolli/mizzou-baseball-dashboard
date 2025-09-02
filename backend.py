@@ -267,84 +267,429 @@ async def get_player_splits(player_name: str):
         "splits": splits_data
     }
 
-# Gameday endpoints (mock for now)
+# Global game state tracker
+_game_state = {"current_pitch_index": 0}
+
+# Gameday endpoints using real MIZZOUVBAMA.csv data in chronological order
 @app.get("/gameday/demo-pitch")
 async def get_demo_pitch():
-    """Get current pitch data for gameday demo"""
-    # This would normally come from live data
-    # For now, return mock structure matching what frontend expects
+    """Get current pitch data from MIZZOUVBAMA game in chronological order"""
+    df = load_csv_safely("MIZZOUVBAMA.csv")
+    if df.empty:
+        return {"error": "No game data available"}
+    
+    # Sort by inning and sequence to ensure chronological order
+    # Assuming the data has some sequence or we'll use row order
+    df_sorted = df.copy()
+    
+    # Get current pitch based on game state
+    current_index = _game_state["current_pitch_index"]
+    if current_index >= len(df_sorted):
+        current_index = len(df_sorted) - 1  # Stay at last pitch
+    
+    pitch_row = df_sorted.iloc[current_index]
+    
+    # Extract base runner info
+    runners_on_base = {
+        "first": not pd.isna(pitch_row.get("ManOn1st", "")),
+        "second": not pd.isna(pitch_row.get("ManOn2nd", "")),
+        "third": not pd.isna(pitch_row.get("ManOn3rd", ""))
+    }
+    
+    # Determine team pitching based on inning
+    inning = pitch_row.get("inn", "Top 1")
+    is_missouri_pitching = "Top" in str(inning)
+    
     return {
         "pitch": {
-            "type": "4-Seam Fastball",
-            "velocity": 92.5,
-            "spinRate": 2350,
-            "result": "Strike Looking",
-            "pitch_result": "Strike Looking",
-            "x": -0.2,
-            "y": 2.1,
-            "count": "1-1",
-            "inning": "Bot 3",
-            "outs": 1,
-            "runners_on_base": {"first": False, "second": True, "third": False},
-            "pitcher": "W. Libbert",
-            "batter": "Unknown",
-            "pitcher_handedness": "L",
-            "batter_handedness": "R",
-            "is_missouri_pitching": True,
-            "team_pitching": "Missouri",
-            "team_hitting": "Alabama"
+            "type": pitch_row.get("type", "Fastball"),
+            "velocity": float(pitch_row.get("Vel", 90.0)) if pd.notna(pitch_row.get("Vel")) else 90.0,
+            "spinRate": float(pitch_row.get("Spin", 2200)) if pd.notna(pitch_row.get("Spin")) else 2200,
+            "result": pitch_row.get("pitchResult", "Strike"),
+            "pitch_result": pitch_row.get("pitchResult", "Strike"),
+            "x": float(pitch_row.get("PX", 0.0)) if pd.notna(pitch_row.get("PX")) else 0.0,
+            "y": float(pitch_row.get("PZ", 2.5)) if pd.notna(pitch_row.get("PZ")) else 2.5,
+            "count": pitch_row.get("count", "0-0"),
+            "inning": inning,
+            "outs": int(pitch_row.get("outs", 0)),
+            "runners_on_base": runners_on_base,
+            "pitcher": pitch_row.get("Pitcher", "Unknown"),
+            "batter": pitch_row.get("Batter", "Unknown"),
+            "pitcher_handedness": pitch_row.get("PitchHand", "R"),
+            "batter_handedness": pitch_row.get("BatterHand", "R"),
+            "is_missouri_pitching": is_missouri_pitching,
+            "team_pitching": "Missouri" if is_missouri_pitching else "Alabama",
+            "team_hitting": "Alabama" if is_missouri_pitching else "Missouri"
         },
         "trackman": {
-            "induced_vertical_break": 14.2,
-            "horizontal_break": -12.1,
-            "extension": 6.1,
-            "release_height": 5.8,
-            "tilt": "10:30",
-            "vertical_approach_angle": -5.2,
-            "horizontal_approach_angle": 1.1
+            "induced_vertical_break": float(pitch_row.get("IndVertBrk", 10.0)) if pd.notna(pitch_row.get("IndVertBrk")) else 10.0,
+            "horizontal_break": float(pitch_row.get("HorzBrk", 0.0)) if pd.notna(pitch_row.get("HorzBrk")) else 0.0,
+            "extension": float(pitch_row.get("Extension", 6.5)) if pd.notna(pitch_row.get("Extension")) else 6.5,
+            "release_height": 6.0,  # Not in data, using typical value
+            "tilt": pitch_row.get("Tilt", "12:00"),
+            "vertical_approach_angle": float(pitch_row.get("VertApprAngle", -5.0)) if pd.notna(pitch_row.get("VertApprAngle")) else -5.0,
+            "horizontal_approach_angle": float(pitch_row.get("HorzApprAngle", 0.0)) if pd.notna(pitch_row.get("HorzApprAngle")) else 0.0
         },
-        "pitcher_stats": {
-            "era": 4.15,
-            "whip": 1.25,
-            "fip": 3.89,
-            "k_bb_percent": 15.2,
-            "csw_percent": 28.5,
-            "first_pitch_strike_percent": 65.0
-        },
-        "batter_stats": {
-            "avg": 0.285,
-            "obp": 0.350,
-            "slg": 0.475,
-            "ops": 0.825,
-            "k_percent": 18.5,
-            "bb_percent": 8.2
-        },
+        "pitcher_stats": _get_pitcher_stats_from_game(df_sorted, pitch_row.get("Pitcher", "Unknown")),
+        "batter_stats": _get_batter_stats_from_game(df_sorted, pitch_row.get("Batter", "Unknown")),
         "game_info": {
-            "total_pitches": 156,
-            "current_pitch_number": 89,
-            "game": "Missouri vs Alabama"
+            "total_pitches": len(df_sorted),
+            "current_pitch_number": current_index + 1,
+            "game": "Missouri vs Alabama",
+            "can_go_previous": current_index > 0,
+            "can_go_next": current_index < len(df_sorted) - 1
         }
+    }
+
+@app.post("/gameday/next-pitch")
+async def next_pitch():
+    """Advance to next pitch in chronological order"""
+    df = load_csv_safely("MIZZOUVBAMA.csv")
+    if df.empty:
+        return {"error": "No game data available"}
+    
+    current_index = _game_state["current_pitch_index"]
+    if current_index < len(df) - 1:
+        _game_state["current_pitch_index"] += 1
+    
+    return await get_demo_pitch()
+
+@app.post("/gameday/previous-pitch")
+async def previous_pitch():
+    """Go back to previous pitch in chronological order"""
+    current_index = _game_state["current_pitch_index"]
+    if current_index > 0:
+        _game_state["current_pitch_index"] -= 1
+    
+    return await get_demo_pitch()
+
+def _get_pitcher_stats_from_game(df: pd.DataFrame, pitcher_name: str) -> Dict:
+    """Get pitcher stats from Alabama season data or game data"""
+    # First try to get season stats from Alabama pitching data
+    alabama_pitching = load_csv_safely("Alabama - Pitching.csv")
+    
+    if not alabama_pitching.empty:
+        # Normalize column names
+        if 'player' in alabama_pitching.columns:
+            alabama_pitching = alabama_pitching.rename(columns={'player': 'Player'})
+        
+        # Find player in Alabama roster
+        player_stats = alabama_pitching[alabama_pitching['Player'].str.contains(pitcher_name, case=False, na=False)]
+        
+        if not player_stats.empty:
+            player_row = player_stats.iloc[0]
+            
+            # Parse percentage values
+            def safe_parse_pct(val):
+                if pd.isna(val):
+                    return None
+                if isinstance(val, str) and val.endswith('%'):
+                    try:
+                        return float(val.strip('%'))
+                    except:
+                        return None
+                return val
+            
+            return {
+                "era": float(player_row.get("ERA", 4.15)) if pd.notna(player_row.get("ERA")) else 4.15,
+                "whip": float(player_row.get("WHIP", 1.25)) if pd.notna(player_row.get("WHIP")) else 1.25,
+                "fip": float(player_row.get("FIP", 3.89)) if pd.notna(player_row.get("FIP")) else 3.89,
+                "k_bb_percent": safe_parse_pct(player_row.get("K%-BB%", 15.2)) or 15.2,
+                "csw_percent": safe_parse_pct(player_row.get("CSW%", 28.5)) or 28.5,
+                "first_pitch_strike_percent": safe_parse_pct(player_row.get("FPStk%", 65.0)) or 65.0
+            }
+    
+    # Fallback to game analysis if no season stats found
+    pitcher_pitches = df[df["Pitcher"] == pitcher_name]
+    
+    if pitcher_pitches.empty:
+        return {
+            "era": 4.50,
+            "whip": 1.30,
+            "fip": 4.20,
+            "k_bb_percent": 12.0,
+            "csw_percent": 28.0,
+            "first_pitch_strike_percent": 60.0
+        }
+    
+    # Calculate stats from actual game data
+    total_pitches = len(pitcher_pitches)
+    strikes = len(pitcher_pitches[pitcher_pitches["pitchResult"].str.contains("Strike|Foul", na=False)])
+    first_pitch_strikes = len(pitcher_pitches[pitcher_pitches["count"] == "0-0"])
+    
+    # Called strikes + whiffs (approximate CSW)
+    called_strikes = len(pitcher_pitches[pitcher_pitches["pitchResult"].str.contains("Strike Looking", na=False)])
+    swinging_strikes = len(pitcher_pitches[pitcher_pitches["pitchResult"].str.contains("Swinging", na=False)])
+    csw_percent = ((called_strikes + swinging_strikes) / total_pitches * 100) if total_pitches > 0 else 25.0
+    
+    return {
+        "era": 4.15,  # Season stats not in game data
+        "whip": 1.25,
+        "fip": 3.89,
+        "k_bb_percent": 15.2,
+        "csw_percent": round(csw_percent, 1),
+        "first_pitch_strike_percent": round((strikes / total_pitches * 100), 1) if total_pitches > 0 else 60.0
+    }
+
+def _get_batter_stats_from_game(df: pd.DataFrame, batter_name: str) -> Dict:
+    """Get batter stats from Alabama season data or game data"""
+    # First try to get season stats from Alabama hitting data
+    alabama_hitting = load_csv_safely("Alabama - Hitting Stats.csv")
+    
+    if not alabama_hitting.empty:
+        # Normalize column names
+        if 'player' in alabama_hitting.columns:
+            alabama_hitting = alabama_hitting.rename(columns={'player': 'Player'})
+        
+        # Find player in Alabama roster
+        player_stats = alabama_hitting[alabama_hitting['Player'].str.contains(batter_name, case=False, na=False)]
+        
+        if not player_stats.empty:
+            player_row = player_stats.iloc[0]
+            
+            # Parse percentage values
+            def safe_parse_pct(val):
+                if pd.isna(val):
+                    return None
+                if isinstance(val, str) and val.endswith('%'):
+                    try:
+                        return float(val.strip('%'))
+                    except:
+                        return None
+                return val
+            
+            # Parse decimal values (like .300)
+            def safe_parse_decimal(val):
+                if pd.isna(val):
+                    return None
+                if isinstance(val, str) and val.startswith('.'):
+                    try:
+                        return float(val)
+                    except:
+                        return None
+                return val
+            
+            return {
+                "avg": safe_parse_decimal(player_row.get("BA", 0.275)) or 0.275,
+                "obp": safe_parse_decimal(player_row.get("OBP", 0.340)) or 0.340,
+                "slg": safe_parse_decimal(player_row.get("SLG", 0.425)) or 0.425,
+                "ops": safe_parse_decimal(player_row.get("OPS", 0.765)) or 0.765,
+                "k_percent": safe_parse_pct(player_row.get("K%", 22.0)) or 22.0,
+                "bb_percent": safe_parse_pct(player_row.get("BB%", 8.5)) or 8.5
+            }
+    
+    # Fallback to game analysis if no season stats found
+    batter_abs = df[df["Batter"] == batter_name]
+    
+    if batter_abs.empty:
+        return {
+            "avg": 0.275,
+            "obp": 0.340,
+            "slg": 0.425,
+            "ops": 0.765,
+            "k_percent": 22.0,
+            "bb_percent": 8.5
+        }
+    
+    # Calculate basic stats from game data
+    total_abs = len(batter_abs)
+    hits = len(batter_abs[batter_abs["ABResult"].str.contains("S|D|T|HR|Single|Double|Triple|Home", na=False)])
+    
+    return {
+        "avg": round(hits / total_abs, 3) if total_abs > 0 else 0.275,
+        "obp": 0.350,  # Would need walk data
+        "slg": 0.475,  # Would need detailed hit data
+        "ops": 0.825,
+        "k_percent": 18.5,
+        "bb_percent": 8.2
     }
 
 @app.post("/gameday/reset-demo")
 async def reset_demo():
-    """Reset demo game state"""
-    return {"status": "reset"}
+    """Reset demo game state to beginning"""
+    _game_state["current_pitch_index"] = 0
+    return {"status": "reset", "message": "Game reset to first pitch"}
 
 @app.get("/gameday/demo-pitch-previous")
 async def get_demo_pitch_previous():
-    """Get previous pitch data for gameday demo"""
-    # Mirror structure of /gameday/demo-pitch with slightly different values
-    data = await get_demo_pitch()
-    data["pitch"]["count"] = "0-1"
-    data["pitch"]["result"] = "Ball"
-    data["pitch"]["pitch_result"] = "Ball"
-    data["pitch"]["x"] = 0.4
-    data["pitch"]["y"] = 3.1
-    data["game_info"]["current_pitch_number"] = max(1, data["game_info"]["current_pitch_number"] - 1)
-    return data
+    """Get previous pitch data for gameday demo (deprecated - use /previous-pitch)"""
+    # Keep for backward compatibility
+    return await previous_pitch()
 
-# Simple AI recommendation stubs
+# Intelligent AI recommendation system using real game data
+def _analyze_pitcher_vs_batter(pitcher: str, batter: str) -> Dict[str, Any]:
+    """Analyze pitcher vs batter matchup using MIZZOUVBAMA game data"""
+    df = load_csv_safely("MIZZOUVBAMA.csv")
+    
+    if df.empty:
+        return _default_recommendation_payload(pitcher, batter)
+    
+    # Get actual matchup data
+    matchup_data = df[(df["Pitcher"] == pitcher) & (df["Batter"] == batter)]
+    pitcher_data = df[df["Pitcher"] == pitcher]
+    batter_data = df[df["Batter"] == batter]
+    
+    # Analyze pitcher tendencies
+    pitcher_analysis = _analyze_pitcher_tendencies(pitcher_data, pitcher)
+    batter_analysis = _analyze_batter_tendencies(batter_data, batter)
+    
+    # Generate smart recommendations
+    recommendations = _generate_smart_recommendations(pitcher_data, batter_data, matchup_data)
+    
+    return {
+        "recommendations": recommendations,
+        "pitcher_analysis": pitcher_analysis,
+        "batter_analysis": batter_analysis
+    }
+
+def _analyze_pitcher_tendencies(pitcher_data: pd.DataFrame, pitcher_name: str) -> Dict:
+    """Analyze pitcher's strengths and weaknesses from game data"""
+    if pitcher_data.empty:
+        return {
+            "name": pitcher_name,
+            "strengths": ["Competitive in strike zone"],
+            "weaknesses": ["Limited sample size"]
+        }
+    
+    # Analyze pitch types and effectiveness
+    pitch_types = pitcher_data["type"].value_counts()
+    most_used_pitch = pitch_types.index[0] if not pitch_types.empty else "Fastball"
+    
+    # Strike percentage
+    strikes = len(pitcher_data[pitcher_data["pitchResult"].str.contains("Strike|Foul", na=False)])
+    strike_pct = (strikes / len(pitcher_data) * 100) if len(pitcher_data) > 0 else 60
+    
+    # Analyze effectiveness by count
+    effective_counts = []
+    if not pitcher_data[pitcher_data["count"].str.contains("0-")].empty:
+        effective_counts.append("strong first-pitch command")
+    if strike_pct > 65:
+        effective_counts.append("above-average strike percentage")
+    
+    strengths = effective_counts if effective_counts else ["Competes in zone"]
+    
+    # Find weaknesses
+    weaknesses = []
+    if strike_pct < 60:
+        weaknesses.append("Below-average strike rate")
+    
+    # Check for hard contact
+    hard_contact = pitcher_data[pitcher_data["ExitVel"].astype(str).str.contains(r'\d', na=False)]
+    if not hard_contact.empty:
+        avg_exit_velo = pd.to_numeric(hard_contact["ExitVel"], errors='coerce').mean()
+        if avg_exit_velo > 95:
+            weaknesses.append("Allows hard contact")
+    
+    if not weaknesses:
+        weaknesses = ["Areas for continued improvement"]
+        
+    return {
+        "name": pitcher_name,
+        "strengths": strengths,
+        "weaknesses": weaknesses
+    }
+
+def _analyze_batter_tendencies(batter_data: pd.DataFrame, batter_name: str) -> Dict:
+    """Analyze batter's strengths and weaknesses from game data"""
+    if batter_data.empty:
+        return {
+            "name": batter_name,
+            "strengths": ["Competitive at-bats"],
+            "weaknesses": ["Limited sample size"]
+        }
+    
+    # Analyze vs different pitch types
+    pitch_struggles = []
+    pitch_strengths = []
+    
+    for pitch_type in ["Fastball", "Slider", "Changeup", "Sinker"]:
+        vs_pitch = batter_data[batter_data["type"] == pitch_type]
+        if not vs_pitch.empty:
+            # Count swings and misses
+            swinging_strikes = len(vs_pitch[vs_pitch["pitchResult"].str.contains("Swinging", na=False)])
+            total_swings = len(vs_pitch[vs_pitch["pitchResult"].str.contains("Swinging|Foul", na=False)])
+            
+            if total_swings > 2:  # Need meaningful sample
+                whiff_rate = swinging_strikes / total_swings
+                if whiff_rate > 0.4:
+                    pitch_struggles.append(f"struggles vs {pitch_type.lower()}")
+                elif whiff_rate < 0.2:
+                    pitch_strengths.append(f"handles {pitch_type.lower()} well")
+    
+    # Analyze by count
+    count_analysis = []
+    behind_counts = batter_data[batter_data["count"].str.contains("0-2|1-2|0-1", na=False)]
+    if not behind_counts.empty and len(behind_counts) > 3:
+        chase_pitches = len(behind_counts[behind_counts["pitchResult"].str.contains("Swinging", na=False)])
+        if chase_pitches / len(behind_counts) > 0.3:
+            pitch_struggles.append("chases when behind in count")
+    
+    strengths = pitch_strengths if pitch_strengths else ["Competitive approach"]
+    weaknesses = pitch_struggles if pitch_struggles else ["Maintains discipline"]
+    
+    return {
+        "name": batter_name,
+        "strengths": strengths,
+        "weaknesses": weaknesses
+    }
+
+def _generate_smart_recommendations(pitcher_data: pd.DataFrame, batter_data: pd.DataFrame, matchup_data: pd.DataFrame) -> List[Dict]:
+    """Generate intelligent pitch recommendations based on data analysis"""
+    recommendations = []
+    
+    if pitcher_data.empty or batter_data.empty:
+        return [
+            {"pitch": "Fastball for strikes", "reasoning": "Establish the zone early", "confidence": "Medium"},
+            {"pitch": "Breaking ball away", "reasoning": "Change eye level and location", "confidence": "Medium"}
+        ]
+    
+    # Analyze pitcher's most effective pitches
+    pitcher_pitches = pitcher_data["type"].value_counts()
+    
+    # Find batter's weaknesses
+    batter_struggles = []
+    for pitch_type in pitcher_pitches.head(3).index:
+        vs_pitch = batter_data[batter_data["type"] == pitch_type]
+        if not vs_pitch.empty:
+            swinging_strikes = len(vs_pitch[vs_pitch["pitchResult"].str.contains("Swinging", na=False)])
+            if swinging_strikes > 0:
+                success_rate = swinging_strikes / len(vs_pitch)
+                if success_rate > 0.25:  # Good success rate
+                    batter_struggles.append((pitch_type, success_rate))
+    
+    # Generate recommendations based on analysis
+    if batter_struggles:
+        top_pitch = batter_struggles[0]
+        recommendations.append({
+            "pitch": f"{top_pitch[0]} for swing-and-miss",
+            "reasoning": f"Batter has shown vulnerability to {top_pitch[0].lower()} in this game",
+            "confidence": "High"
+        })
+    
+    # Location-based recommendations
+    if not pitcher_data.empty:
+        # Analyze strike zone tendencies
+        strike_zone_data = pitcher_data[pitcher_data["pitchResult"].str.contains("Strike", na=False)]
+        if not strike_zone_data.empty:
+            avg_zone_x = pd.to_numeric(strike_zone_data["PX"], errors='coerce').mean()
+            if pd.notna(avg_zone_x):
+                location = "away" if avg_zone_x > 0 else "inside"
+                recommendations.append({
+                    "pitch": f"Attack {location} corner",
+                    "reasoning": f"Pitcher has shown good command {location} in this game",
+                    "confidence": "Medium"
+                })
+    
+    # Count-based strategy
+    recommendations.append({
+        "pitch": "First-pitch strike",
+        "reasoning": "Get ahead in the count to dictate the at-bat",
+        "confidence": "High"
+    })
+    
+    return recommendations[:3]  # Return top 3 recommendations
+
+# Simple AI recommendation fallback
 def _default_recommendation_payload(pitcher: str, batter: str) -> Dict[str, Any]:
     return {
         "recommendations": [
@@ -368,16 +713,53 @@ def _default_recommendation_payload(pitcher: str, batter: str) -> Dict[str, Any]
 async def pitch_recommendation(payload: Dict[str, Any]):
     pitcher = payload.get("pitcher", "Missouri Pitcher")
     batter = payload.get("batter", "Opponent Batter")
-    return _default_recommendation_payload(pitcher, batter)
+    return _analyze_pitcher_vs_batter(pitcher, batter)
 
 @app.post("/api/hitting-recommendation")
 async def hitting_recommendation(payload: Dict[str, Any]):
     pitcher = payload.get("pitcher", "Opponent Pitcher")
     batter = payload.get("batter", "Missouri Batter")
-    data = _default_recommendation_payload(pitcher, batter)
-    # Flip strengths/weaknesses emphasis for hitter view
-    data["recommendations"][0]["pitch"] = "Aggressive FB early zone"
-    data["recommendations"][0]["reasoning"] = "Attack fastballs early in count before pitcher expands."
+    
+    # Flip the analysis for hitting perspective
+    data = _analyze_pitcher_vs_batter(pitcher, batter)
+    
+    # Convert pitcher weaknesses to hitting opportunities
+    hitting_recs = []
+    
+    df = load_csv_safely("MIZZOUVBAMA.csv")
+    if not df.empty:
+        pitcher_data = df[df["Pitcher"] == pitcher]
+        
+        # Look for pitcher tendencies to exploit
+        if not pitcher_data.empty:
+            # Find pitcher's most used pitches
+            pitch_usage = pitcher_data["type"].value_counts()
+            if not pitch_usage.empty:
+                most_used = pitch_usage.index[0]
+                hitting_recs.append({
+                    "pitch": f"Look for {most_used} early",
+                    "reasoning": f"Pitcher relies heavily on {most_used.lower()} - be ready to attack",
+                    "confidence": "High"
+                })
+            
+            # Analyze pitcher's strike zone tendencies
+            strikes = pitcher_data[pitcher_data["pitchResult"].str.contains("Strike", na=False)]
+            if not strikes.empty:
+                avg_location = pd.to_numeric(strikes["PX"], errors='coerce').mean()
+                if pd.notna(avg_location):
+                    zone = "away" if avg_location > 0 else "inside"
+                    hitting_recs.append({
+                        "pitch": f"Sit on {zone} location",
+                        "reasoning": f"Pitcher pounds the {zone} part of the zone",
+                        "confidence": "Medium"
+                    })
+    
+    if not hitting_recs:
+        hitting_recs = [
+            {"pitch": "Attack first-pitch strikes", "reasoning": "Be aggressive early in favorable counts", "confidence": "High"}
+        ]
+    
+    data["recommendations"] = hitting_recs
     return data
 
 # Alabama scouting endpoints (from CSVs)
