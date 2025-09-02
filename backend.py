@@ -341,7 +341,7 @@ async def get_demo_pitch():
         }
     }
 
-@app.post("/gameday/next-pitch")
+@app.get("/gameday/next-pitch")
 async def next_pitch():
     """Advance to next pitch in chronological order"""
     df = load_csv_safely("MIZZOUVBAMA.csv")
@@ -354,7 +354,7 @@ async def next_pitch():
     
     return await get_demo_pitch()
 
-@app.post("/gameday/previous-pitch")
+@app.get("/gameday/previous-pitch")
 async def previous_pitch():
     """Go back to previous pitch in chronological order"""
     current_index = _game_state["current_pitch_index"]
