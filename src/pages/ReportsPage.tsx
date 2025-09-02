@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, ScatterChart, Scatter, BarChart, Bar } from 'recharts';
 import Header from "../components/Header";
+import { api } from "@/utils/api";
 
 const ReportsPage = () => {
     const { playerId } = useParams();
@@ -53,7 +54,7 @@ const ReportsPage = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const res = await fetch(`http://localhost:8000/reports/${playerId}`);
+                const res = await api(`/reports/${playerId}`);
                 if (!res.ok) {
                     throw new Error(`Failed to fetch data: ${res.status}`);
                 }
@@ -99,7 +100,7 @@ const ReportsPage = () => {
 
         try {
             setSplitsLoading(true);
-            const res = await fetch(`http://localhost:8000/splits/${playerId}`);
+            const res = await api(`/splits/${playerId}`);
             if (!res.ok) {
                 throw new Error(`Failed to fetch splits data: ${res.status}`);
             }

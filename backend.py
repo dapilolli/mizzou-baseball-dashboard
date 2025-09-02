@@ -4,6 +4,7 @@ Mizzou Baseball Analytics Dashboard - Backend Server
 Serves CSV data via REST API for the React frontend
 """
 
+import os
 import pandas as pd
 import json
 from pathlib import Path
@@ -16,11 +17,17 @@ from typing import Dict, List, Any
 
 app = FastAPI(title="Mizzou Baseball Analytics API", version="1.0.0")
 
-# Enable CORS for React frontend
+# Enable CORS for React frontend (configurable via env)
+_origins_env = os.getenv("FRONTEND_ORIGINS", "").strip()
+if _origins_env:
+    _origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+else:
+    _origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_credentials=False if _origins == ["*"] else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -324,6 +331,121 @@ async def reset_demo():
     """Reset demo game state"""
     return {"status": "reset"}
 
+@app.get("/gameday/demo-pitch-previous")
+async def get_demo_pitch_previous():
+    """Get previous pitch data for gameday demo"""
+    # Mirror structure of /gameday/demo-pitch with slightly different values
+    data = await get_demo_pitch()
+    data["pitch"]["count"] = "0-1"
+    data["pitch"]["result"] = "Ball"
+    data["pitch"]["pitch_result"] = "Ball"
+    data["pitch"]["x"] = 0.4
+    data["pitch"]["y"] = 3.1
+    data["game_info"]["current_pitch_number"] = max(1, data["game_info"]["current_pitch_number"] - 1)
+    return data
+
+# Simple AI recommendation stubs
+def _default_recommendation_payload(pitcher: str, batter: str) -> Dict[str, Any]:
+    return {
+        "recommendations": [
+            {"pitch": "Slider low-away", "reasoning": f"{batter} chases spin off the plate in two-strike counts.", "confidence": "High"},
+            {"pitch": "Elevated fastball", "reasoning": f"Change eye level after breaking ball to induce late swing.", "confidence": "Medium"},
+            {"pitch": "Changeup down", "reasoning": f"Tunnel off fastball for groundball contact.", "confidence": "Medium"},
+        ],
+        "pitcher_analysis": {
+            "name": pitcher,
+            "strengths": ["First-pitch strike rate above team avg", "Above-average slider CSW%"],
+            "weaknesses": ["Occasional arm-side miss with changeup"],
+        },
+        "batter_analysis": {
+            "name": batter,
+            "strengths": ["Punishes mistakes middle-in", "Handles below-average velo"],
+            "weaknesses": ["Whiff vs spin away", "Chase% increases when behind in count"],
+        },
+    }
+
+@app.post("/api/pitch-recommendation")
+async def pitch_recommendation(payload: Dict[str, Any]):
+    pitcher = payload.get("pitcher", "Missouri Pitcher")
+    batter = payload.get("batter", "Opponent Batter")
+    return _default_recommendation_payload(pitcher, batter)
+
+@app.post("/api/hitting-recommendation")
+async def hitting_recommendation(payload: Dict[str, Any]):
+    pitcher = payload.get("pitcher", "Opponent Pitcher")
+    batter = payload.get("batter", "Missouri Batter")
+    data = _default_recommendation_payload(pitcher, batter)
+    # Flip strengths/weaknesses emphasis for hitter view
+    data["recommendations"][0]["pitch"] = "Aggressive FB early zone"
+    data["recommendations"][0]["reasoning"] = "Attack fastballs early in count before pitcher expands."
+    return data
+
+# Alabama scouting endpoints (from CSVs)
+def _parse_percent(v: Any) -> Any:
+    if isinstance(v, str) and v.endswith('%'):
+        try:
+            return float(v.strip('%'))
+        except Exception:
+            return None
+    return v
+
+def _parse_decimal(v: Any) -> Any:
+    # Handle values like .407
+    if isinstance(v, str) and v.startswith('.'):
+        try:
+            return float(v)
+        except Exception:
+            return None
+    return v
+
+@app.get("/api/alabama-pitchers")
+async def alabama_pitchers():
+    df = load_csv_safely("Alabama - Pitching.csv")
+    if df.empty:
+        return []
+
+    # Normalize column names
+    if 'player' in df.columns:
+        df = df.rename(columns={'player': 'Player'})
+
+    # Convert percent columns to numbers and decimals to floats
+    percent_cols = [c for c in df.columns if c.endswith('%')]
+    for c in percent_cols:
+        df[c] = df[c].apply(_parse_percent)
+    for c in ['wOBA', 'xWOBA']:
+        if c in df.columns:
+            df[c] = df[c].apply(_parse_decimal)
+
+    # Keep only columns the frontend expects when present
+    expected = [
+        'Player','IP','ERA','WHIP','FIP','K%','BB%','K%-BB%','CSW%','FPStk%','InZone%','Chase%','HardHit%','Barrel%','GB/FB','wOBA','xWOBA'
+    ]
+    cols = [c for c in expected if c in df.columns]
+    return df[cols].to_dict(orient='records')
+
+@app.get("/api/alabama-hitters")
+async def alabama_hitters():
+    df = load_csv_safely("Alabama - Hitting Stats.csv")
+    if df.empty:
+        return []
+
+    if 'player' in df.columns:
+        df = df.rename(columns={'player': 'Player'})
+
+    percent_cols = [c for c in df.columns if c.endswith('%')]
+    for c in percent_cols:
+        df[c] = df[c].apply(_parse_percent)
+    for c in ['wOBA', 'xWOBA']:
+        if c in df.columns:
+            df[c] = df[c].apply(_parse_decimal)
+
+    expected = [
+        'Player','PA','AB','BA','OBP','SLG','OPS','wOBA','xWOBA',
+        'Miss% vs CH','Miss% vs Spin','Miss% vs FB','ChangeMiss%','RISPPull%','FastMiss%','Swing%','HOppFld%','HPull%',
+        'LaunchAng','AvgEV','MaxEV','HardHit%','Barrel%','H','1B','2B','3B','HR'
+    ]
+    cols = [c for c in expected if c in df.columns]
+    return df[cols].to_dict(orient='records')
 @app.get("/gameday/due-up")
 async def get_due_up():
     """Get due up hitters"""
@@ -727,8 +849,8 @@ if __name__ == "__main__":
     
     uvicorn.run(
         "backend:app",
-        host="127.0.0.1", 
-        port=8000,
-        reload=True,
-        log_level="info"
+        host=os.getenv("HOST", "127.0.0.1"),
+        port=int(os.getenv("PORT", "8000")),
+        reload=bool(os.getenv("RELOAD", "1") == "1"),
+        log_level=os.getenv("LOG_LEVEL", "info")
     )

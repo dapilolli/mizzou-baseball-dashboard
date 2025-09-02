@@ -46,12 +46,8 @@ const MatchupMatrix: React.FC<MatchupMatrixProps> = ({
     };
 
     const getRecommendationIcon = (approach: string): string => {
-        if (approach.toLowerCase().includes('fastball')) return '🔥';
-        if (approach.toLowerCase().includes('slider')) return '🌀';
-        if (approach.toLowerCase().includes('changeup')) return '💫';
-        if (approach.toLowerCase().includes('breaking')) return '🌪️';
         if (approach.toLowerCase().includes('avoid')) return '⚠️';
-        return '🎯';
+        return '';
     };
 
     return (

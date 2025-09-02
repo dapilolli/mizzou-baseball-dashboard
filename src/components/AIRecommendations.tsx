@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE } from '@/utils/api';
 
 interface Recommendation {
     pitch: string;
@@ -67,8 +68,8 @@ const AIRecommendations: React.FC<AIRecommendationsProps> = ({
         try {
             // Use different endpoint based on game state
             const endpoint = isMissouriPitching
-                ? 'http://localhost:8000/api/pitch-recommendation'
-                : 'http://localhost:8000/api/hitting-recommendation';
+                ? `${API_BASE || ''}/api/pitch-recommendation`
+                : `${API_BASE || ''}/api/hitting-recommendation`;
 
             const response = await fetch(endpoint, {
                 method: 'POST',

@@ -55,28 +55,24 @@ const ScoutingPageEnhanced: React.FC = () => {
         }, 100);
     };
 
+    // Remove emoji icons for view modes
     const getViewModeIcon = (mode: ViewMode): string => {
-        switch (mode) {
-            case 'visual': return '📊';
-            case 'narrative': return '📝';
-            case 'split': return '🔀';
-            default: return '📊';
-        }
+        return '';
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <div className="min-h-screen bg-black flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-                    <p className="text-white text-xl">Loading scouting report...</p>
+                    <p className="text-yellow-400 text-xl">Loading scouting report...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className={`min-h-screen bg-gray-900 ${isPrintMode ? 'print-mode' : ''}`}>
+        <div className={`min-h-screen bg-black ${isPrintMode ? 'print-mode' : ''}`}>
             {/* Print Styles */}
             <style>
                 {`
@@ -102,10 +98,10 @@ const ScoutingPageEnhanced: React.FC = () => {
                 <div className="mb-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                         <div>
-                            <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-                                🎯 Advanced Scouting Hub
+                            <h1 className="text-4xl font-bold text-yellow-400 mb-2 flex items-center">
+                                Advanced Scouting Hub
                             </h1>
-                            <p className="text-gray-300 text-lg">
+                            <p className="text-white text-lg">
                                 Dual-mode analytics & tactical intelligence
                             </p>
                         </div>
@@ -118,12 +114,12 @@ const ScoutingPageEnhanced: React.FC = () => {
                                     type="text"
                                     value={opponent}
                                     onChange={(e) => handleOpponentChange(e.target.value)}
-                                    className="px-3 py-2 bg-gray-800 text-white border border-gray-600 rounded-lg focus:border-yellow-400 focus:outline-none"
+                                    className="px-3 py-2 bg-black text-yellow-400 border border-yellow-400 rounded-lg focus:border-yellow-400 focus:outline-none"
                                     placeholder="Team name"
                                 />
                                 <button
                                     onClick={loadScoutingData}
-                                    className="px-4 py-2 bg-yellow-400 text-black font-medium rounded-lg hover:bg-yellow-300 transition-colors"
+                                    className="px-4 py-2 bg-yellow-400 text-black font-medium rounded-lg hover:bg-yellow-500 transition-colors"
                                 >
                                     Load Report
                                 </button>
@@ -141,10 +137,10 @@ const ScoutingPageEnhanced: React.FC = () => {
                                         onClick={() => setViewMode(mode)}
                                         className={`px-4 py-2 rounded-md font-medium transition-all ${viewMode === mode
                                             ? 'bg-yellow-400 text-black'
-                                            : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                                            : 'text-yellow-400 hover:text-white hover:bg-yellow-700'
                                             }`}
                                     >
-                                        {getViewModeIcon(mode)} {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                                        {mode.charAt(0).toUpperCase() + mode.slice(1)}
                                     </button>
                                 ))}
                             </div>
@@ -152,9 +148,8 @@ const ScoutingPageEnhanced: React.FC = () => {
                             <div className="flex items-center space-x-3">
                                 <button
                                     onClick={handleExportPDF}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                                    className="px-4 py-2 bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition-colors flex items-center space-x-2"
                                 >
-                                    <span>🖨️</span>
                                     <span>Export PDF</span>
                                 </button>
                                 <div className="text-gray-400 text-sm">
@@ -178,20 +173,20 @@ const ScoutingPageEnhanced: React.FC = () => {
                 {scoutingData ? (
                     <div className="space-y-6">
                         {/* Game Context Banner */}
-                        <div className="bg-gradient-to-r from-blue-800 to-purple-800 rounded-lg p-4 text-white">
+                        <div className="bg-gradient-to-r from-black to-yellow-400 rounded-lg p-4 text-white">
                             <div className="flex flex-wrap items-center justify-between">
                                 <div className="flex items-center space-x-6">
-                                    <h2 className="text-xl font-bold">{scoutingData.opponent} Scouting Report</h2>
+                                    <h2 className="text-xl font-bold text-yellow-400">{scoutingData.opponent} Scouting Report</h2>
                                     <div className="text-sm opacity-90">
-                                        🌤️ {scoutingData.gameContext.weather} |
-                                        🌪️ {scoutingData.gameContext.wind} |
-                                        🌡️ {scoutingData.gameContext.temperature}°F
+                                        Weather: {scoutingData.gameContext.weather} |
+                                        Wind: {scoutingData.gameContext.wind} |
+                                        Temp: {scoutingData.gameContext.temperature}°F
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-4 text-sm">
-                                    <span>👥 {scoutingData.hitters.length} Hitters</span>
-                                    <span>⚾ {scoutingData.pitchers.length} Pitchers</span>
-                                    <span>🔥 {scoutingData.matchups.length} Key Matchups</span>
+                                    <span className="text-yellow-400">{scoutingData.hitters.length} Hitters</span>
+                                    <span className="text-yellow-400">{scoutingData.pitchers.length} Pitchers</span>
+                                    <span className="text-yellow-400">{scoutingData.matchups.length} Key Matchups</span>
                                 </div>
                             </div>
                         </div>
@@ -216,8 +211,8 @@ const ScoutingPageEnhanced: React.FC = () => {
                         {viewMode === 'split' && (
                             <div className="grid lg:grid-cols-2 gap-6">
                                 <div className="space-y-4">
-                                    <h3 className="text-xl font-bold text-white border-b border-gray-600 pb-2">
-                                        📊 Visual Analysis
+                                    <h3 className="text-xl font-bold text-yellow-400 border-b border-yellow-400 pb-2">
+                                        Visual Analysis
                                     </h3>
                                     <VisualModePanel
                                         data={scoutingData}
@@ -227,8 +222,8 @@ const ScoutingPageEnhanced: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-4 print-break">
-                                    <h3 className="text-xl font-bold text-white border-b border-gray-600 pb-2">
-                                        📝 Tactical Narrative
+                                    <h3 className="text-xl font-bold text-yellow-400 border-b border-yellow-400 pb-2">
+                                        Tactical Narrative
                                     </h3>
                                     <NarrativeModePanel
                                         data={scoutingData}
@@ -242,12 +237,11 @@ const ScoutingPageEnhanced: React.FC = () => {
                     </div>
                 ) : (
                     <div className="text-center py-12">
-                        <div className="text-6xl mb-4">🎯</div>
-                        <h2 className="text-2xl font-bold text-white mb-4">Ready to Scout</h2>
-                        <p className="text-gray-400 mb-6">
+                        <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ready to Scout</h2>
+                        <p className="text-white mb-6">
                             Enter an opponent team name and click "Load Report" to generate comprehensive scouting intelligence.
                         </p>
-                        <div className="text-gray-500 text-sm">
+                        <div className="text-yellow-400 text-sm">
                             • Visual analytics with charts and heatmaps<br />
                             • AI-generated tactical narratives<br />
                             • Matchup analysis and recommendations<br />

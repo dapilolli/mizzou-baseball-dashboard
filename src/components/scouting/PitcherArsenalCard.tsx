@@ -78,7 +78,7 @@ const PitcherArsenalCard: React.FC<PitcherArsenalCardProps> = ({ pitcher, filter
                     </div>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl">⚾</div>
+                    <div className="text-2xl"></div>
                     <div className="text-xs text-gray-500">#{pitcher.id}</div>
                 </div>
             </div>
@@ -244,7 +244,7 @@ const PitcherArsenalCard: React.FC<PitcherArsenalCardProps> = ({ pitcher, filter
                     {/* Attack Recommendations */}
                     <div className="bg-yellow-400 bg-opacity-10 border border-yellow-400 rounded p-3 mb-4">
                         <h4 className="text-sm font-medium text-yellow-400 mb-2 flex items-center">
-                            🎯 Attack Recommendations
+                            Attack Recommendations
                         </h4>
                         <ul className="space-y-1">
                             {getAttackRecommendations().slice(0, isCompact ? 2 : 4).map((rec, index) => (

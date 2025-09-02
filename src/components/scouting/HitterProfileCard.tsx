@@ -106,7 +106,6 @@ const HitterProfileCard: React.FC<HitterProfileCardProps> = ({ hitter, filters, 
                     </div>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl">🏏</div>
                     <div className="text-xs text-gray-500">#{hitter.id}</div>
                 </div>
             </div>
@@ -151,8 +150,8 @@ const HitterProfileCard: React.FC<HitterProfileCardProps> = ({ hitter, filters, 
                                 </div>
                             </div>
                             <div className="flex justify-center mt-2 text-xs text-gray-400">
-                                <span className="mr-4">🔥 Hot: +0.10+</span>
-                                <span className="mr-4">❄️ Cold: -0.05-</span>
+                                <span className="mr-4">Hot: +0.10+</span>
+                                <span className="mr-4">Cold: -0.05-</span>
                             </div>
                         </div>
                     )}

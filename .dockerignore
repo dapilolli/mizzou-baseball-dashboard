@@ -1,0 +1,9 @@
+.git
+node_modules
+dist
+venv
+.venv
+.DS_Store
+.vite
+**/*.log
+

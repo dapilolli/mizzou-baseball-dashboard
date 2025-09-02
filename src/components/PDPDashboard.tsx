@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, BarChart, Bar } from 'recharts';
+import { api } from '@/utils/api';
 
 interface DrillProgress {
     date: string;
@@ -296,7 +297,7 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
     const fetchPersonalizedDrills = async (playerName: string) => {
         try {
             console.log('Fetching personalized drills for:', playerName);
-            const response = await fetch(`http://localhost:8000/pdp/${playerName}/personalized-drills`);
+            const response = await api(`/pdp/${playerName}/personalized-drills`);
             console.log('Response status:', response.status);
 
             if (response.ok) {
@@ -617,7 +618,7 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
         if (playerType && playerName) {
             // First, fetch player's tier from the backend and personalized drills
             Promise.all([
-                fetch(`http://localhost:8000/pdp/${playerName}/dashboard`),
+                api(`/pdp/${playerName}/dashboard`),
                 fetchPersonalizedDrills(playerName)
             ])
                 .then(([dashboardResponse, personalizedDrills]) => {
@@ -639,7 +640,7 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
                     setDailyRoutines(routines);
 
                     // Load existing drill logs from backend
-                    return fetch(`http://localhost:8000/pdp/${playerName}/drill-logs`);
+                    return api(`/pdp/${playerName}/drill-logs`);
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -724,7 +725,7 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
     const handleDrillLogSubmit = async (drillId: string, logData: any) => {
         try {
             // Save to backend
-            const response = await fetch(`http://localhost:8000/pdp/${playerName}/drill-log`, {
+            const response = await api(`/pdp/${playerName}/drill-log`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -967,7 +968,7 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
 
             try {
                 // Fetch dashboard data from backend
-                const dashboardRes = await fetch(`http://localhost:8000/pdp/${playerName}/dashboard`);
+                const dashboardRes = await api(`/pdp/${playerName}/dashboard`);
 
                 if (dashboardRes.ok) {
                     const dashboardData = await dashboardRes.json();
@@ -2111,5 +2112,3 @@ const PDPDashboard: React.FC<PDPDashboardProps> = ({ playerName, playerType }) =
 };
 
 export default PDPDashboard;
-
-

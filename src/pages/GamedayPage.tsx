@@ -5,6 +5,7 @@ import AlabamaScouting from '../components/AlabamaScouting';
 import './GamedayPage.css';
 
 // API Response Interfaces - matching your backend exactly
+import { api } from '@/utils/api';
 interface ApiPitchData {
     id: number;
     type: string | null;
@@ -130,7 +131,7 @@ const GamedayPage: React.FC = () => {
     // Fetch due up hitters
     const fetchDueUpHitters = async () => {
         try {
-            const response = await fetch('http://localhost:8000/gameday/due-up');
+            const response = await api('/gameday/due-up');
             if (response.ok) {
                 const data = await response.json();
                 setDueUpHitters(data);
@@ -143,7 +144,7 @@ const GamedayPage: React.FC = () => {
     // Fetch lineup
     const fetchLineup = async () => {
         try {
-            const response = await fetch('http://localhost:8000/team/hitters');
+            const response = await api('/team/hitters');
             if (response.ok) {
                 const data = await response.json();
                 setLineup(data);
@@ -159,7 +160,7 @@ const GamedayPage: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch('http://localhost:8000/gameday/demo-pitch');
+            const response = await api('/gameday/demo-pitch');
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -195,7 +196,7 @@ const GamedayPage: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch('http://localhost:8000/gameday/demo-pitch-previous');
+            const response = await api('/gameday/demo-pitch-previous');
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -226,7 +227,7 @@ const GamedayPage: React.FC = () => {
     // Reset game to beginning
     const resetGame = async () => {
         try {
-            await fetch('http://localhost:8000/gameday/reset-demo', { method: 'POST' });
+            await api('/gameday/reset-demo', { method: 'POST' });
             setCurrentPitch(null);
             setPitchHistory([]);
             setCurrentAtBatPitches([]);

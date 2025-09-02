@@ -126,7 +126,6 @@ const PlayerNarrativeList: React.FC<PlayerNarrativeListProps> = ({
             const hotZones = hitter.hotColdZones.filter(z => z > 0.1).length;
             const discipline = 100 - hitter.chaseRate;
 
-            if (discipline > 75 && hotZones > 3) return '🔥'; // Elite threat
             if (discipline > 65 || hotZones > 2) return '⚠️'; // Dangerous
             if (hitter.chaseRate > 35) return '🎯'; // Exploitable
             return '👤'; // Standard
@@ -137,7 +136,6 @@ const PlayerNarrativeList: React.FC<PlayerNarrativeListProps> = ({
 
             if (avgWhiff > 30) return '🔥'; // Dominant
             if (avgWhiff > 25) return '⚡'; // Quality
-            return '⚾'; // Hittable
         }
     };
 
@@ -202,7 +200,7 @@ const PlayerNarrativeList: React.FC<PlayerNarrativeListProps> = ({
                 {activePlayerType === 'hitters' && (
                     <>
                         <h3 className="text-xl font-bold text-white flex items-center">
-                            🏏 Hitter Intelligence Cards
+                            Hitter Intelligence Cards
                         </h3>
                         {data.hitters.slice(0, isCompact ? 3 : undefined).map((hitter) => {
                             const priority = getPriorityLevel(hitter);
@@ -261,7 +259,7 @@ const PlayerNarrativeList: React.FC<PlayerNarrativeListProps> = ({
                 {activePlayerType === 'pitchers' && (
                     <>
                         <h3 className="text-xl font-bold text-white flex items-center">
-                            ⚾ Pitcher Intelligence Cards
+                            Pitcher Intelligence Cards
                         </h3>
                         {data.pitchers.slice(0, isCompact ? 2 : undefined).map((pitcher) => {
                             const priority = getPriorityLevel(pitcher);
@@ -337,7 +335,7 @@ const PlayerNarrativeList: React.FC<PlayerNarrativeListProps> = ({
                     </div>
 
                     <div>
-                        <h3 className="text-xl font-bold text-white mb-4">⚾ Pitcher Intelligence</h3>
+                        <h3 className="text-xl font-bold text-white mb-4"> Pitcher Intelligence</h3>
                         {data.pitchers.map((pitcher) => {
                             const narrative = generatePitcherNarrative(pitcher);
                             return (

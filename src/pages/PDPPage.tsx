@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PDPDashboard from "../components/PDPDashboard";
 import Header from "../components/Header";
+import { api } from "@/utils/api";
 
 export default function PDPPage() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function PDPPage() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/pdp/list")
+    api("/pdp/list")
       .then((res) => res.json())
       .then((data) => {
         setPlayers(data);

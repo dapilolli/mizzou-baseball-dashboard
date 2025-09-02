@@ -21,10 +21,10 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
     const [activeTab, setActiveTab] = useState<'pitchers' | 'hitters' | 'matchups' | 'situations'>('pitchers');
 
     const tabs = [
-        { id: 'pitchers', label: 'Pitcher Arsenal', icon: '⚾', count: data.pitchers.length },
-        { id: 'hitters', label: 'Hitter Profiles', icon: '🏏', count: data.hitters.length },
-        { id: 'matchups', label: 'Key Matchups', icon: '⚔️', count: data.matchups.length },
-        { id: 'situations', label: 'Situational', icon: '📊', count: 1 }
+        { id: 'pitchers', label: 'Pitcher Arsenal', icon: '', count: data.pitchers.length },
+        { id: 'hitters', label: 'Hitter Profiles', icon: '', count: data.hitters.length },
+        { id: 'matchups', label: 'Key Matchups', icon: '', count: data.matchups.length },
+        { id: 'situations', label: 'Situational', icon: '', count: 1 }
     ] as const;
 
     return (
@@ -37,11 +37,10 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${activeTab === tab.id
-                                    ? 'bg-yellow-400 text-black'
-                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                                ? 'bg-yellow-400 text-black'
+                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
                                 }`}
                         >
-                            <span>{tab.icon}</span>
                             <span>{tab.label}</span>
                             <span className={`text-xs px-2 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-black text-yellow-400' : 'bg-gray-700 text-gray-400'
                                 }`}>
@@ -59,14 +58,14 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
                     <div className="space-y-4">
                         {(!isCompact && !isPrintMode) && (
                             <h2 className="text-2xl font-bold text-white flex items-center">
-                                ⚾ Pitcher Arsenal Analysis
+                                Pitcher Arsenal Analysis
                             </h2>
                         )}
                         <div className={`grid gap-6 ${isCompact
+                            ? 'grid-cols-1'
+                            : isPrintMode
                                 ? 'grid-cols-1'
-                                : isPrintMode
-                                    ? 'grid-cols-1'
-                                    : 'grid-cols-1 xl:grid-cols-2'
+                                : 'grid-cols-1 xl:grid-cols-2'
                             }`}>
                             {data.pitchers.slice(0, isCompact ? 2 : undefined).map((pitcher) => (
                                 <PitcherArsenalCard
@@ -85,7 +84,7 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
                     <div className="space-y-4">
                         {!isPrintMode && (
                             <h2 className="text-2xl font-bold text-white flex items-center">
-                                🏏 Hitter Profile Analysis
+                                Hitter Profile Analysis
                             </h2>
                         )}
                         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -121,7 +120,7 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
                     <div className="space-y-4">
                         {(!isCompact && !isPrintMode) && (
                             <h2 className="text-2xl font-bold text-white flex items-center">
-                                ⚔️ Key Matchup Analysis
+                                Key Matchup Analysis
                             </h2>
                         )}
                         <MatchupMatrix
@@ -139,7 +138,7 @@ const VisualModePanel: React.FC<VisualModePanelProps> = ({
                     <div className="space-y-4">
                         {!isPrintMode && (
                             <h2 className="text-2xl font-bold text-white flex items-center">
-                                📊 Situational Intelligence
+                                Situational Intelligence
                             </h2>
                         )}
                         <SituationalBox

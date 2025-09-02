@@ -103,7 +103,7 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
                 {/* Small Ball */}
                 <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                     <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-lg font-medium text-white">⚾ Small Ball</h4>
+                        <h4 className="text-lg font-medium text-white">Small Ball</h4>
                         <span className={`text-sm font-bold ${situational.buntFrequency > 5 ? 'text-red-500' : 'text-green-500'
                             }`}>
                             {situational.buntFrequency > 5 ? 'ACTIVE' : 'MINIMAL'}
@@ -132,7 +132,7 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="text-lg font-medium text-white">💥 Power Zones</h4>
                         <span className={`text-sm font-bold ${getHotZoneCount() > 4 ? 'text-red-500' :
-                                getHotZoneCount() > 2 ? 'text-yellow-500' : 'text-green-500'
+                            getHotZoneCount() > 2 ? 'text-yellow-500' : 'text-green-500'
                             }`}>
                             {getHotZoneCount()} HOT ZONES
                         </span>
@@ -144,8 +144,8 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
                                 <div
                                     key={i}
                                     className={`text-xs text-center p-1 rounded ${risk > 12 ? 'bg-red-500 text-white' :
-                                            risk > 8 ? 'bg-yellow-500 text-black' :
-                                                'bg-gray-600 text-gray-300'
+                                        risk > 8 ? 'bg-yellow-500 text-black' :
+                                            'bg-gray-600 text-gray-300'
                                         }`}
                                 >
                                     {risk}%
@@ -161,7 +161,7 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
                 {/* Bullpen Status */}
                 <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                     <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-lg font-medium text-white">🔥 Bullpen Status</h4>
+                        <h4 className="text-lg font-medium text-white"> Bullpen Status</h4>
                         <span className={`text-sm font-bold px-2 py-1 rounded-full ${bullpenStatus.color}`}>
                             {bullpenStatus.status}
                         </span>
@@ -188,7 +188,7 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
             {/* Bullpen Depth Chart */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <h4 className="text-lg font-medium text-white mb-4 flex items-center">
-                    📊 Bullpen Fatigue & Workload
+                    Bullpen Fatigue & Workload
                 </h4>
 
                 <div className="mb-4">
@@ -231,7 +231,7 @@ const SituationalBox: React.FC<SituationalBoxProps> = ({ situational, bullpen, f
                                         <div key={i} className="text-xs">
                                             <div className="text-white">{pitcher.pitcher} ({pitcher.throws})</div>
                                             <div className={`${pitcher.fatigueLevel > 6 ? 'text-red-400' :
-                                                    pitcher.fatigueLevel > 4 ? 'text-yellow-400' : 'text-green-400'
+                                                pitcher.fatigueLevel > 4 ? 'text-yellow-400' : 'text-green-400'
                                                 }`}>
                                                 Fatigue: {pitcher.fatigueLevel}/10
                                             </div>

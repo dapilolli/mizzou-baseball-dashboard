@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '@/utils/api';
 
 const TeamPage = () => {
   const [data, setData] = useState<any[]>([]);
@@ -19,7 +20,7 @@ const TeamPage = () => {
   const navigate = useNavigate();
 
   const fetchData = async (type: string) => {
-    const res = await fetch(`http://localhost:8000/team/${type}`);
+    const res = await api(`/team/${type}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch data: ${res.status}`);
     }

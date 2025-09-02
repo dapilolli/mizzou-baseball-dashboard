@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { api } from '@/utils/api';
 
 interface AlabamaPitcher {
     Player: string;
@@ -117,7 +118,7 @@ const AlabamaScouting: React.FC<AlabamaScoutingProps> = ({
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/api/alabama-pitchers');
+            const response = await api('/api/alabama-pitchers');
             if (!response.ok) {
                 throw new Error('Failed to fetch Alabama pitchers');
             }
@@ -144,7 +145,7 @@ const AlabamaScouting: React.FC<AlabamaScoutingProps> = ({
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/api/alabama-hitters');
+            const response = await api('/api/alabama-hitters');
             if (!response.ok) {
                 throw new Error('Failed to fetch Alabama hitters');
             }

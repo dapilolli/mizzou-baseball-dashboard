@@ -28,8 +28,8 @@ const ReportsListPage = () => {
                 setError(null);
                 // Fetch both hitters and pitchers
                 const [hittersRes, pitchersRes] = await Promise.all([
-                    fetch('http://localhost:8000/team/hitters'),
-                    fetch('http://localhost:8000/team/pitchers')
+                    api('/team/hitters'),
+                    api('/team/pitchers')
                 ]);
 
                 if (!hittersRes.ok || !pitchersRes.ok) {
@@ -143,3 +143,4 @@ const ReportsListPage = () => {
 };
 
 export default ReportsListPage;
+import { api } from '@/utils/api';
