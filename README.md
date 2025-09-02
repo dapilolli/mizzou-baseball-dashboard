@@ -54,19 +54,21 @@ A comprehensive dual-mode scouting hub that combines professional data visualiza
 3. **Start development server**
 
    ```bash
-
-   npm run dev
+   # Start backend server (requires Python backend)
+   uvicorn backend:app --reload
+   
+   # Start frontend (requires build tool configuration)
+   # Development server setup pending
    ```
 
 4. **Open browser**
-   Navigate to `http://localhost:5173` (or the port shown in terminal)
+   Navigate to the configured development port
 
 ### Build for Production
 
 ```bash
-npm run build
-
-npm run preview
+# Build configuration pending
+# Production build setup required
 ```
 
 ## 📊 Data Structure
@@ -124,7 +126,6 @@ The application uses TrackMan/TruMedia-style baseball analytics with comprehensi
 - **Frontend**: React 18 + TypeScript
 - **Styling**: TailwindCSS for responsive design
 - **Charts**: Recharts for data visualization
-- **Build Tool**: Vite for fast development
 - **Routing**: React Router for navigation
 - **Data Processing**: Mock data with realistic baseball analytics
 
@@ -230,96 +231,3 @@ For questions or support, please open an issue in the GitHub repository.
 ---
 
 **Built with ❤️ for baseball analytics and coaching excellence** 🐅⚾
-
-## 🚀 Deploying (Make It Live)
-
-This project has a Vite React frontend and a FastAPI backend. A simple setup is:
-
-- Frontend: Netlify or Vercel (static hosting)
-- Backend: Render (Python web service)
-
-### Frontend configuration
-
-- All API calls use `VITE_API_BASE` for the backend URL. Set this env var when building or in your host’s dashboard.
-- SPA fallback is enabled via `public/_redirects` so deep links work.
-
-Build locally (optional):
-
-```
-VITE_API_BASE=https://YOUR-BACKEND-URL npm run build
-```
-
-### Backend on Render
-
-Use the provided `render.yaml` (Blueprint):
-
-- New + → Blueprint → Connect this repo
-- Start Command: `uvicorn backend:app --host 0.0.0.0 --port $PORT`
-- Add env var `FRONTEND_ORIGINS=https://YOUR-FRONTEND-DOMAIN`
-
-Alternatively create a Python Web Service manually with:
-
-- Build Command: `pip install -r requirements.txt`
-- Start Command: `uvicorn backend:app --host 0.0.0.0 --port $PORT`
-
-### Frontend on Vercel
-
-- This repo includes `vercel.json` to serve a Vite SPA from `dist/` and route all paths to `index.html`.
-- In Vercel UI → New Project → Import this repo.
-- Framework preset: Vite (or Other → Static Build).
-- Build command: `npm run build`
-- Output directory: `dist`
-- Environment variables:
-  - `VITE_API_BASE=https://YOUR-BACKEND-URL` (the Render service URL)
-
-### GitHub Action to Deploy Frontend (Vercel)
-
-There is a workflow at `.github/workflows/deploy-vercel.yml`.
-
-Add repository secrets:
-
-- `VERCEL_TOKEN`: Vercel token (Account → Settings → Tokens)
-- `VERCEL_ORG_ID`: Your Vercel org/team ID
-- `VERCEL_PROJECT_ID`: Your Vercel project ID
-
-On pushes to `main`/`master`, it triggers a production deploy on Vercel.
-
-### GitHub Action to Trigger Backend Deploy (Render)
-
-There is a workflow at `.github/workflows/deploy-backend.yml` that triggers a Render deploy via deploy hook.
-
-Add this repository secret:
-
-- `RENDER_DEPLOY_HOOK_URL`: Render service Deploy Hook URL (Render → Service → Settings → Deploy hooks)
-
-On pushes that touch backend files, the action POSTs the hook to start a Render deploy.
-
-### Local Dev Proxy
-
-`vite.config.ts` proxies API paths to `http://localhost:8000` so you can run:
-
-```
-uvicorn backend:app --reload
-npm run dev
-```
-
-With no `VITE_API_BASE` set, the frontend calls relative paths and the proxy handles CORS-free dev.
-
-### CORS and env
-
-- Backend CORS uses `FRONTEND_ORIGINS` (comma-separated). If unset, `*` is allowed (no credentials).
-- Frontend uses `VITE_API_BASE`. If empty, API calls are relative (works with reverse proxy under same origin).
-
-### Frontend on Vercel
-
-- This repo includes `vercel.json` to serve a Vite SPA from `dist/` and route all paths to `index.html`.
-- In Vercel UI → New Project → Import this repo.
-- Framework preset: Vite (or Other → Static Build).
-- Build command: `npm run build`
-- Output directory: `dist`
-- Environment variables:
-  - `VITE_API_BASE=https://YOUR-BACKEND-URL` (the Render service URL)
-
-After first deploy, update Render CORS:
-
-- On Render, set `FRONTEND_ORIGINS=https://YOUR-PROJECT.vercel.app` (and add your custom domain later if used, comma-separated).

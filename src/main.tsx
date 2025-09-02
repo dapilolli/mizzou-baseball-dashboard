@@ -11,7 +11,6 @@ import LoginPage from './pages/LoginPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import './index.css'
 import Header from './components/Header'
-import { Analytics } from '@vercel/analytics/react'
 
 // Check if user is authenticated
 const isAuthenticated = () => localStorage.getItem('isAuthenticated') === 'true';
@@ -20,7 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Header />
-      <Analytics />
       <Routes>
         {/* Login Route */}
         <Route path="/login" element={<LoginPage />} />
