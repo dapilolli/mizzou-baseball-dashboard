@@ -1,7 +1,7 @@
-// Central API helper to avoid hardcoding localhost
+// Central API helper for backend communication
 // Use: api('/team/hitters') instead of fetch('http://localhost:8000/team/hitters')
 
-const base = (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, '') || ''
+const base = process.env.API_BASE?.replace(/\/$/, '') || ''
 
 export const API_BASE: string = base
 
