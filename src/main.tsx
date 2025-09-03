@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import TeamPage from './pages/TeamPage'
 import ReportsPage from './pages/ReportsPage'
 import ReportsListPage from './pages/ReportsListPage'
@@ -67,6 +69,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      <Analytics />
+      <SpeedInsights />
     </BrowserRouter>
   </React.StrictMode>,
 )
